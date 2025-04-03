@@ -78,9 +78,9 @@ print("\nOutliers Removed from Numerical Features.")
 
 # Engagement Score (weighted sum of activities)
 processed_df["Engagement_Score"] = (
-    (processed_df["Daily_Usage_Time (minutes)"] * 0.4) +
-    (processed_df["Posts_Per_Day"] * 0.2) +
-    (processed_df["Likes_Received_Per_Day"] * 0.15) +
+    (processed_df["Daily_Usage_Time (minutes)"] * 0.3) +
+    (processed_df["Posts_Per_Day"] * 0.05) +
+    (processed_df["Likes_Received_Per_Day"] * 0.4) +
     (processed_df["Comments_Received_Per_Day"] * 0.15) +
     (processed_df["Messages_Sent_Per_Day"] * 0.1)
 )
@@ -135,12 +135,10 @@ print(train_df.head())
 print("\nProcessed Data:")
 print(processed_df.head())
 
-valid_genders = ["Male", "Female", "Non-Binary"]
-processed_df['Gender'] = processed_df['Gender'].apply(lambda x: x if x in valid_genders else "Other")
+
 
 
 # Data Visualization
-# Set style
 sns.set(style="whitegrid")
 
 ### Reverse Mapping for Encoded Features
@@ -173,39 +171,76 @@ axes[1].set_ylabel('')
 # Adjust layout
 plt.tight_layout()
 plt.show()
-# 4️⃣ Platform Preference by Age Group (Processed Data)
+#Platform Preference by Age Group (Processed Data)
 plt.figure(figsize=(10, 5))
 sns.countplot(data=processed_df, x='Platform', hue='Age_Group', order=processed_df['Platform'].value_counts().index)
 plt.title("Platform Preference by Age Group (Processed Data)")
 plt.xticks(rotation=45)
 plt.show()
 
-# 5️⃣ Engagement Score vs Age Group
+#Engagement Score vs Age Group
 plt.figure(figsize=(10, 5))
 sns.boxplot(data=processed_df, x='Age_Group', y='Engagement_Score')
 plt.title("Engagement Score by Age Group")
 plt.xticks(rotation=45)
 plt.show()
 
-# 6️⃣ Engagement Score vs Emotion
+#Engagement Score vs Emotion
 plt.figure(figsize=(10, 5))
 sns.boxplot(data=processed_df, x='Dominant_Emotion', y='Engagement_Score')
 plt.title("Engagement Score by Emotion")
 plt.xticks(rotation=45)
 plt.show()
 
-# 7️⃣ Platform vs Emotion Correlation
+#Platform vs Emotion Correlation
 plt.figure(figsize=(10, 6))
 platform_emotion_correlation = pd.crosstab(train_df['Platform'], train_df['Dominant_Emotion'])
 sns.heatmap(platform_emotion_correlation, cmap='Blues', annot=True, fmt='d')
 plt.title("Platform vs Emotion Correlation")
 plt.show()
 
-# 8️⃣ Boxplot - Daily Usage Time by Platform
+#Boxplot - Daily Usage Time by Platform
 plt.figure(figsize=(12, 5))
 sns.boxplot(data=processed_df, x='Platform', y='Daily_Usage_Time (minutes)')
 plt.title("Daily Usage Time by Platform")
 plt.xticks(rotation=45)
 plt.show()
 
+
+
 print("\nData Visualization Completed.")
+
+# Selecting the most significant feature: Engagement_Score
+feature = "Daily_Usage_Time (minutes)"
+
+# Calculate statistics
+std_dev = train_df[feature].std()
+mean_value = train_df[feature].mean()
+variance = train_df[feature].var()
+
+# Prepare data for plotting
+plot_data = train_df[feature].sort_values().reset_index(drop=True)
+
+plt.figure(figsize=(10, 5))
+
+# Line plot for Engagement_Score
+plt.plot(plot_data, label=f"{feature} (Sorted)", color='royalblue', linewidth=2)
+
+# Horizontal lines for Mean & Standard Deviation
+plt.axhline(y=mean_value, color='green', linestyle='--', linewidth=2, label=f"Mean: {mean_value:.2f}")
+plt.axhline(y=mean_value + std_dev, color='orange', linestyle='--', linewidth=2, label=f"Mean + 1 SD: {mean_value + std_dev:.2f}")
+plt.axhline(y=mean_value - std_dev, color='orange', linestyle='--', linewidth=2, label=f"Mean - 1 SD: {mean_value - std_dev:.2f}")
+
+# Title and Labels
+plt.title(f"Analysis of {feature}: Mean, Standard Deviation, and Variance", fontsize=14)
+plt.xlabel("Sorted Data Index", fontsize=12)
+plt.ylabel(feature, fontsize=12)
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.6)
+
+plt.show()
+
+print(f"\n📊 {feature} Analysis:")
+print(f"Mean: {mean_value:.2f}")
+print(f"Standard Deviation: {std_dev:.2f}")
+print(f"Variance: {variance:.2f}")
