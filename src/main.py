@@ -1,46 +1,73 @@
-#pip install pandas openpyxl scikit-learn matplotlib seaborn
-
 import pandas as pd
+import os
 
-# Define file paths (adjust if necessary)
-train_path = "D:\\Users\\amisa\\Downloads\\Social Media Usage - Train.xlsm"
-test_path = "D:\\Users\\amisa\\Downloads\\Social Media Usage - Test.xlsm"
-val_path = "D:\\Users\\amisa\\Downloads\\Social Media Usage - Val.xlsm"
-sleep_path = "D:\\Users\\amisa\\Downloads\\Sleep Dataset.xlsm"
+# Define dataset folder
+dataset_folder = "D:\\Users\\amisa\\Downloads"
+
+# Define file paths dynamically
+file_paths = {
+    "train": os.path.join(dataset_folder, "Social Media Usage - Train.xlsm"),
+    "test": os.path.join(dataset_folder, "Social Media Usage - Test.xlsm"),
+    "val": os.path.join(dataset_folder, "Social Media Usage - Val.xlsm"),
+    "sleep": os.path.join(dataset_folder, "Sleep Dataset.xlsm")
+}
 
 # Load datasets
-train_df = pd.read_excel(train_path)
-test_df = pd.read_excel(test_path)
-val_df = pd.read_excel(val_path)
-sleep_df = pd.read_excel(sleep_path, sheet_name="Sleep Dataset")
+train_df = pd.read_excel(file_paths["train"])
+test_df = pd.read_excel(file_paths["test"])
+val_df = pd.read_excel(file_paths["val"])
+sleep_df = pd.read_excel(file_paths["sleep"], sheet_name="Sleep Dataset")
 
-# Print basic info
-print("Train Dataset:", train_df.shape)
-print("Test Dataset:", test_df.shape)
-print("Validation Dataset:", val_df.shape)
-print("Sleep Dataset:", sleep_df.shape)
+# Remove completely blank rows from all datasets
+for df in [train_df, test_df, val_df, sleep_df]:
+    df.dropna(how='all', inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
-print(val_df.dtypes)
+# Print updated column names to debug
+print("\nUpdated Column Names in Train Dataset:", train_df.columns.tolist())
 
+# Identify numerical and categorical columns
+num_cols = ["Daily_Usage_Time (minutes)", "Posts_Per_Day", "Likes_Received_Per_Day",
+            "Comments_Received_Per_Day", "Messages_Sent_Per_Day"]
 
-# Identify numerical and categorical columns correctly
-num_cols = train_df.select_dtypes(include=["number"]).columns.tolist()
-cat_cols = train_df.select_dtypes(include=["object"]).columns.tolist()
+cat_cols = ["User_ID", "Age", "Gender", "Platform", "Dominant_Emotion"]
 
-print("Numerical Columns:", num_cols)
+print("\nNumerical Columns:", num_cols)
 print("Categorical Columns:", cat_cols)
 
-# Fill missing numerical values with median
-train_df[num_cols] = train_df[num_cols].fillna(train_df[num_cols].median())
-test_df[num_cols] = test_df[num_cols].fillna(test_df[num_cols].median())
-val_df[num_cols] = val_df[num_cols].fillna(val_df[num_cols].median())
+# Convert numerical columns to float (checking existence before transformation)
+for df in [train_df, test_df, val_df, sleep_df]:
+    for col in num_cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
 
-# Fill missing categorical values with mode
-for col in cat_cols:
-    train_df[col] = train_df[col].fillna(train_df[col].mode()[0])
-    test_df[col] = test_df[col].fillna(test_df[col].mode()[0])
-    val_df[col] = val_df[col].fillna(val_df[col].mode()[0])
+# Apply preprocessing ONLY to training dataset
+if not train_df.empty:
+    train_df[num_cols] = train_df[num_cols].apply(lambda x: x.fillna(x.median()), axis=0)
+    for col in cat_cols:
+        if col in train_df.columns:
+            train_df[col] = train_df[col].astype(str).fillna(train_df[col].mode()[0])
 
-print("Missing Values After Cleaning:")
+# Print missing values after cleaning
+print("\nMissing Values After Cleaning (Train Only):")
 print(train_df.isnull().sum())
 
+print("\n✅ Data Preprocessing Completed Successfully (Only for Training Data)")
+
+from sklearn.preprocessing import OrdinalEncoder
+
+# Encode categorical features using OrdinalEncoder
+encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+
+# Ensure categorical columns are strings and fill NaNs
+for col in ["Gender", "Platform", "Dominant_Emotion"]:
+    if col in train_df.columns:
+        train_df[col] = train_df[col].astype(str).fillna("Unknown")
+
+# Fit encoder on training data and transform datasets
+if not train_df.empty:
+    train_df[["Gender", "Platform", "Dominant_Emotion"]] = encoder.fit_transform(
+        train_df[["Gender", "Platform", "Dominant_Emotion"]]
+    )
+
+print(train_df.head())
