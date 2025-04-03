@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 
 # Define dataset folder
-dataset_folder = "C:\\Users\\ishit\\PycharmProjects\\datathon 2025\\data"
+dataset_folder = "D:\\Users\\amisa\\Downloads"
 
 # Define file paths dynamically
 file_paths = {
@@ -139,33 +139,53 @@ print("\nProcessed Data:")
 print(processed_df.head())
 
 
-# Data Visualization
-plt.figure(figsize=(12, 6))
+#-----test preprocessing-----#
+# Copy test_df to preserve original data
+processed_test_df = test_df.copy()
+
+# Convert numerical columns to float
 for col in num_cols:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    sns.histplot(train_df[col], bins=30, kde=True, ax=axes[0])
-    axes[0].set_title(f'Unprocessed {col}')
-    sns.histplot(processed_df[col], bins=30, kde=True, ax=axes[1])
-    axes[1].set_title(f'Processed {col}')
-    plt.show()
+    if col in processed_test_df.columns:
+        processed_test_df[col] = pd.to_numeric(processed_test_df[col], errors='coerce')
 
-# Boxplots to check outliers
-for col in num_cols:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    sns.boxplot(y=train_df[col], ax=axes[0])
-    axes[0].set_title(f'Unprocessed {col}')
-    sns.boxplot(y=processed_df[col], ax=axes[1])
-    axes[1].set_title(f'Processed {col}')
-    plt.show()
+# Handle missing values in numerical columns
+if not processed_test_df.empty:
+    processed_test_df[num_cols] = processed_test_df[num_cols].apply(lambda x: x.fillna(x.median()), axis=0)
+    for col in cat_cols:
+        processed_test_df[col] = processed_test_df[col].astype(str)
+        mode_value = processed_test_df[col].mode().astype(str)[0]
+        processed_test_df[col] = processed_test_df[col].fillna(mode_value)
 
-# Count plots for categorical features
-for col in ["Age", "Gender", "Platform", "Dominant_Emotion"]:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    sns.countplot(x=train_df[col], ax=axes[0], order=train_df[col].value_counts().index)
-    axes[0].set_title(f'Unprocessed {col}')
-    sns.countplot(x=processed_df[col], ax=axes[1], order=processed_df[col].value_counts().index)
-    axes[1].set_title(f'Processed {col}')
-    plt.xticks(rotation=45)
-    plt.show()
+# Convert Age to numeric and create Age Groups in test data
+processed_test_df["Age"] = pd.to_numeric(processed_test_df["Age"], errors='coerce')
 
-print("\nData Visualization Completed.")
+def age_grouping(age):
+    if pd.isna(age): return "Unknown"
+    age = int(age)
+    return "Under 18" if age < 18 else "18-24" if age < 25 else "25-34" if age < 35 else "35-44" if age < 45 else "45-59" if age < 60 else "60+"
+
+processed_test_df["Age_Group"] = processed_test_df["Age"].apply(age_grouping)
+
+# Encode categorical variables after ensuring Age_Group exists
+processed_test_df[["Gender", "Platform", "Dominant_Emotion", "Age_Group"]] = encoder.transform(
+    processed_test_df[["Gender", "Platform", "Dominant_Emotion", "Age_Group"]]
+)
+
+
+# Encode categorical variables
+for col in ["Gender", "Platform", "Dominant_Emotion", "Age_Group"]:
+    if col in processed_test_df.columns:
+        processed_test_df[col] = processed_test_df[col].astype(str).fillna("Unknown")
+
+processed_test_df[["Gender", "Platform", "Dominant_Emotion", "Age_Group"]] = encoder.transform(
+    processed_test_df[["Gender", "Platform", "Dominant_Emotion", "Age_Group"]]
+)
+
+# Scale numerical features
+processed_test_df[scaled_features] = scaler.transform(processed_test_df[scaled_features])
+
+# Save processed test data
+processed_test_data_path = os.path.join(dataset_folder, "processed_test_data.csv")
+processed_test_df.to_csv(processed_test_data_path, index=False)
+
+print(f"\nProcessed Test Data Saved at: {processed_test_data_path}")
