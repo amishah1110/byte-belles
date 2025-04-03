@@ -80,7 +80,7 @@ correlation_matrix = train_df[num_cols].corr()
 plt.figure(figsize=(10, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
 plt.title("Correlation Heatmap")
-plt.show()
+#plt.show()
 
 # Find most related features (Top 3)
 corr_unstacked = correlation_matrix.abs().unstack().sort_values(ascending=False)
@@ -90,3 +90,47 @@ top_correlated_features = corr_unstacked[:6].index.tolist()  # Get top 3 feature
 print("Most Related Features => Top 3 pairs based on correlation:")
 for pair in top_correlated_features:
     print(f"{pair[0]} ↔ {pair[1]}: {correlation_matrix.loc[pair[0], pair[1]]:.2f}")
+
+#KDE plot- Distribution of Daily Usage Time
+plt.figure(figsize=(8, 5))
+sns.histplot(train_df["Daily_Usage_Time (minutes)"], bins=30, kde=True, color="blue")
+plt.xlabel("Daily Usage Time (minutes)")
+plt.ylabel("Frequency")
+plt.title("Distribution of Daily Usage Time")
+#plt.show()
+
+
+
+#-------------test preprocessing-------------#
+# Identify columns that should be numeric and categorical
+numeric_cols = ["Age", "Daily_Usage_Time (minutes)", "Posts_Per_Day",
+                "Likes_Received_Per_Day", "Comments_Received_Per_Day", "Messages_Sent_Per_Day"]
+categorical_cols = ["User_ID", "Gender", "Platform", "Dominant_Emotion"]
+
+# Detect incorrect values and fix them
+for col in numeric_cols:
+    if col in test_df.columns:
+        invalid_rows = test_df[test_df[col].apply(lambda x: not str(x).replace('.', '', 1).isdigit())]
+        print(f"\n🚨 Incorrect values in '{col}':")
+        print(invalid_rows[[col]].head())
+
+        # Convert column to numeric, replacing invalid values with NaN
+        test_df[col] = pd.to_numeric(test_df[col], errors="coerce")
+
+        # Replace NaN with column mean
+        test_df[col] = test_df[col].fillna(test_df[col].mean())
+
+for col in categorical_cols:
+    if col in test_df.columns:
+        invalid_rows = test_df[test_df[col].apply(lambda x: str(x).replace('.', '', 1).isdigit())]
+        print(f"\n🚨 Incorrect values in '{col}':")
+        print(invalid_rows[[col]].head())
+
+        # Convert column to string, replacing invalid numeric values with NaN
+        test_df[col] = test_df[col].astype(str)
+
+        # Replace invalid values with mode
+        test_df[col] = test_df[col].apply(lambda x: x if not x.replace('.', '', 1).isdigit() else None)
+        test_df[col] = test_df[col].fillna(test_df[col].mode()[0])
+
+print("\n✅ Test Data Preprocessing Completed Successfully!")
