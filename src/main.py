@@ -59,15 +59,6 @@ print("\n✅ Data Preprocessing Completed Successfully (Only for Training Data)"
 
 from sklearn.preprocessing import OrdinalEncoder
 
-# Encode categorical features using OrdinalEncoder
-encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
-
-# Ensure categorical columns are strings and fill NaNs
-for col in ["Gender", "Platform", "Dominant_Emotion"]:
-    if col in processed_df.columns:
-        processed_df[col] = processed_df[col].astype(str).fillna("Unknown")
-        processed_df[col] = encoder.fit_transform(processed_df[[col]])
-
 print(train_df.head())
 
 
@@ -102,22 +93,28 @@ def age_grouping(age):
     return "Under 18" if age < 18 else "18-24" if age < 25 else "25-34" if age < 35 else "35-44" if age < 45 else "45-59" if age < 60 else "60+"
 processed_df["Age_Group"] = processed_df["Age"].apply(age_grouping)
 
-# Encode Age_Group
-processed_df[["Age_Group"]] = encoder.fit_transform(processed_df[["Age_Group"]])
-print("\nFeature Engineering Completed.")
 
-### ENCODE CATEGORICAL VARIABLES ###
+# Encode categorical features using OrdinalEncoder
 encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
 
-# Ensure categorical columns are strings and fill NaNs
+# Dictionary to store categorical mappings
+encoding_maps = {}
+
+# Ensure categorical columns are strings before encoding
 for col in ["Gender", "Platform", "Dominant_Emotion", "Age_Group"]:
     if col in processed_df.columns:
         processed_df[col] = processed_df[col].astype(str).fillna("Unknown")
 
-# Encode categorical columns
-processed_df[["Gender", "Platform", "Dominant_Emotion", "Age_Group"]] = encoder.fit_transform(
-    processed_df[["Gender", "Platform", "Dominant_Emotion", "Age_Group"]]
-)
+        # Fit encoder and store mappings
+        encoder.fit(processed_df[[col]])
+        encoding_maps[col] = {category: idx for idx, category in enumerate(encoder.categories_[0])}
+
+        # Transform data
+        processed_df[col] = encoder.transform(processed_df[[col]])
+
+print("\nCategory Encodings:")
+for col, mapping in encoding_maps.items():
+    print(f"{col}: {mapping}")
 
 print("\nCategorical Encoding Completed.")
 
@@ -138,34 +135,77 @@ print(train_df.head())
 print("\nProcessed Data:")
 print(processed_df.head())
 
+valid_genders = ["Male", "Female", "Non-Binary"]
+processed_df['Gender'] = processed_df['Gender'].apply(lambda x: x if x in valid_genders else "Other")
+
 
 # Data Visualization
-plt.figure(figsize=(12, 6))
-for col in num_cols:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    sns.histplot(train_df[col], bins=30, kde=True, ax=axes[0])
-    axes[0].set_title(f'Unprocessed {col}')
-    sns.histplot(processed_df[col], bins=30, kde=True, ax=axes[1])
-    axes[1].set_title(f'Processed {col}')
-    plt.show()
+# Set style
+sns.set(style="whitegrid")
 
-# Boxplots to check outliers
-for col in num_cols:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    sns.boxplot(y=train_df[col], ax=axes[0])
-    axes[0].set_title(f'Unprocessed {col}')
-    sns.boxplot(y=processed_df[col], ax=axes[1])
-    axes[1].set_title(f'Processed {col}')
-    plt.show()
+### Reverse Mapping for Encoded Features
+def decode_column(df, column, mapping_dict):
+    return df[column].map({v: k for k, v in mapping_dict.items()})
 
-# Count plots for categorical features
-for col in ["Age", "Gender", "Platform", "Dominant_Emotion"]:
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    sns.countplot(x=train_df[col], ax=axes[0], order=train_df[col].value_counts().index)
-    axes[0].set_title(f'Unprocessed {col}')
-    sns.countplot(x=processed_df[col], ax=axes[1], order=processed_df[col].value_counts().index)
-    axes[1].set_title(f'Processed {col}')
-    plt.xticks(rotation=45)
-    plt.show()
+### Apply Reverse Mapping to Processed Data
+processed_df['Gender'] = decode_column(processed_df, 'Gender', encoding_maps['Gender'])
+processed_df['Platform'] = decode_column(processed_df, 'Platform', encoding_maps['Platform'])
+processed_df['Dominant_Emotion'] = decode_column(processed_df, 'Dominant_Emotion', encoding_maps['Dominant_Emotion'])
+processed_df['Age_Group'] = decode_column(processed_df, 'Age_Group', encoding_maps['Age_Group'])
+
+# Create subplots
+fig, axes = plt.subplots(1, 2, figsize=(18, 6))
+
+# Age Group Distribution
+processed_df['Age_Group'].value_counts().plot.pie(
+    autopct='%1.1f%%', startangle=90, cmap='coolwarm', ax=axes[0], fontsize=12
+)
+axes[0].set_title("Age Group Distribution", fontsize=14)
+axes[0].set_ylabel('')
+
+# Platform Usage
+processed_df['Platform'].value_counts().plot.pie(
+    autopct='%1.1f%%', startangle=90, cmap='coolwarm', ax=axes[1], fontsize=12
+)
+axes[1].set_title("Platform Usage", fontsize=14)
+axes[1].set_ylabel('')
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+# 4️⃣ Platform Preference by Age Group (Processed Data)
+plt.figure(figsize=(10, 5))
+sns.countplot(data=processed_df, x='Platform', hue='Age_Group', order=processed_df['Platform'].value_counts().index)
+plt.title("Platform Preference by Age Group (Processed Data)")
+plt.xticks(rotation=45)
+plt.show()
+
+# 5️⃣ Engagement Score vs Age Group
+plt.figure(figsize=(10, 5))
+sns.boxplot(data=processed_df, x='Age_Group', y='Engagement_Score')
+plt.title("Engagement Score by Age Group")
+plt.xticks(rotation=45)
+plt.show()
+
+# 6️⃣ Engagement Score vs Emotion
+plt.figure(figsize=(10, 5))
+sns.boxplot(data=processed_df, x='Dominant_Emotion', y='Engagement_Score')
+plt.title("Engagement Score by Emotion")
+plt.xticks(rotation=45)
+plt.show()
+
+# 7️⃣ Platform vs Emotion Correlation
+plt.figure(figsize=(10, 6))
+platform_emotion_correlation = pd.crosstab(train_df['Platform'], train_df['Dominant_Emotion'])
+sns.heatmap(platform_emotion_correlation, cmap='Blues', annot=True, fmt='d')
+plt.title("Platform vs Emotion Correlation")
+plt.show()
+
+# 8️⃣ Boxplot - Daily Usage Time by Platform
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=processed_df, x='Platform', y='Daily_Usage_Time (minutes)')
+plt.title("Daily Usage Time by Platform")
+plt.xticks(rotation=45)
+plt.show()
 
 print("\nData Visualization Completed.")
