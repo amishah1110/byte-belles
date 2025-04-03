@@ -1,5 +1,8 @@
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 # Define dataset folder
 dataset_folder = "D:\\Users\\amisa\\Downloads"
@@ -70,4 +73,20 @@ if not train_df.empty:
         train_df[["Gender", "Platform", "Dominant_Emotion"]]
     )
 
-print(train_df.head())
+# Compute correlation matrix
+correlation_matrix = train_df[num_cols].corr()
+
+# Plot heatmap
+plt.figure(figsize=(10, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
+plt.title("Correlation Heatmap")
+plt.show()
+
+# Find most related features (Top 3)
+corr_unstacked = correlation_matrix.abs().unstack().sort_values(ascending=False)
+corr_unstacked = corr_unstacked[corr_unstacked < 1]  # Remove self-correlations
+top_correlated_features = corr_unstacked[:6].index.tolist()  # Get top 3 feature pairs
+
+print("Most Related Features => Top 3 pairs based on correlation:")
+for pair in top_correlated_features:
+    print(f"{pair[0]} ↔ {pair[1]}: {correlation_matrix.loc[pair[0], pair[1]]:.2f}")
