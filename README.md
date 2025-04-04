@@ -55,12 +55,13 @@ Selecting the best predictive model was a crucial step. We employed the TPOT Aut
   6. Naïve Bayes: Works well with categorical data but assumes independence.
 
 **Model Performance Comparison**
-![model selection](https://github.com/user-attachments/assets/aed617e0-131b-474f-ae7e-e87399245bf5)
+![model selection](https://github.com/user-attachments/assets/4d114bae-9940-44d4-a13e-254a900aabfe)
+
 Gradient Boosting was chosen due to good accuracy in train and test datasets
 
 
 **Dashboard Images**
-![WhatsApp Image 2025-04-04 at 18 57 50_25a8a434](https://github.com/user-attachments/assets/55e4b6c3-11bf-4b56-b96b-5d2b32f29ac1)
+![DATATHON 2025 - BYTE BELLES](https://github.com/user-attachments/assets/cb4b8a3c-cad3-4bf9-bea9-e21e6fb0bda8)
 ![WhatsApp Image 2025-04-04 at 18 58 06_eaaf858c](https://github.com/user-attachments/assets/01781c2e-d216-4eaa-b51f-da64b1e6c154)
 ![WhatsApp Image 2025-04-04 at 18 58 37_2547fe1e](https://github.com/user-attachments/assets/2f0337f6-6410-4c38-be0b-22fdd7187d87)
 ![WhatsApp Image 2025-04-04 at 18 58 56_72711ea3](https://github.com/user-attachments/assets/c33267dd-e089-4f73-9ef9-378cd812c016)
