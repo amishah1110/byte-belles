@@ -16,5 +16,5 @@ elif page == "sleep":
     sleep_dav.show_preprocessed_sleep()
 elif page == "social":
     shum.show_social_dashboard()
-elif page == "predictor":
-    predict.show_predictor_page()
+# elif page == "predictor":
+#     predict.show_predictor_page()
