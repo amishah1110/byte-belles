@@ -2,64 +2,81 @@ import pandas as pd
 from scipy.spatial import KDTree
 import random
 
-# Load datasets
-sleep_file = "D:\\Sanika\\Datathon\\byte-belles\\Data\\Sleep Dataset.xlsm"
-usage_file = "D:\\Sanika\\Datathon\\byte-belles\\Data\\Social Media Usage - Train.xlsx"
+# --- File Paths ---
+data_dir = "D:\\Sanika\\Datathon\\byte-belles\\Data"
+output_dir = "D:\\Sanika\\Datathon\\byte-belles\\Data\\MergedData"
 
+sleep_file = f"{data_dir}\\Sleep Dataset.xlsm"
+train_file = f"{data_dir}\\Social Media Usage - Train.xlsx"
+test_file = f"{data_dir}\\Social Media Usage - Test.xlsx"
+val_file = f"{data_dir}\\Social Media Usage - Val.xlsx"
+
+# Output files
+train_output = f"{output_dir}\\Merged_Train.csv"
+test_output = f"{output_dir}\\Merged_Test.csv"
+val_output = f"{output_dir}\\Merged_Val.csv"
+
+# --- Load datasets ---
 sleep_df = pd.read_excel(sleep_file, sheet_name="Sleep Dataset")
-usage_df = pd.read_excel(usage_file)
+train_df = pd.read_excel(train_file)
+test_df = pd.read_excel(test_file)
+val_df = pd.read_excel(val_file)
 
-# Step 1: Clean Social Media Usage Dataset
-usage_df_cleaned = usage_df.dropna().drop(columns=["User_ID"])  # Remove null rows and drop User_ID
-usage_df_cleaned = usage_df_cleaned[usage_df_cleaned["Gender"].isin(["Male", "Female"])]  # Remove non-binary gender
-
-# Step 2: Clean and Augment Sleep Dataset
-sleep_df_cleaned = sleep_df.drop(columns=["Person ID"])  # Remove Person ID
-sleep_df_cleaned = sleep_df_cleaned[sleep_df_cleaned["Gender"].isin(["Male", "Female"])]  # Remove non-binary gender
-
-# Data augmentation: Duplicate sleep dataset to double its size
+# --- Clean and augment sleep data ---
+sleep_df_cleaned = sleep_df.drop(columns=["Person ID"], errors="ignore")
+sleep_df_cleaned = sleep_df_cleaned[sleep_df_cleaned["Gender"].isin(["Male", "Female"])]
 sleep_df_augmented = pd.concat([sleep_df_cleaned, sleep_df_cleaned.copy()], ignore_index=True)
-
-# Convert age columns to numeric
-usage_df_cleaned["Age"] = pd.to_numeric(usage_df_cleaned["Age"])
 sleep_df_augmented["Age"] = pd.to_numeric(sleep_df_augmented["Age"])
 
-# Step 3: Nearest Age Matching with Upsampling (Random Selection)
-merged_data = []
 
-for gender in ["Male", "Female"]:
-    # Filter datasets by gender
-    usage_subset = usage_df_cleaned[usage_df_cleaned["Gender"] == gender]
-    sleep_subset = sleep_df_augmented[sleep_df_augmented["Gender"] == gender]
+# --- Function to merge and save ---
+def merge_and_save(usage_df, sleep_df_augmented, output_path):
+    # Clean usage data
+    usage_df = usage_df.dropna().drop(columns=["User_ID"], errors="ignore")
+    usage_df = usage_df[usage_df["Gender"].isin(["Male", "Female"])]
+    usage_df["Age"] = pd.to_numeric(usage_df["Age"])
 
-    # Build a KDTree for nearest neighbor search based on age
-    age_tree = KDTree(sleep_subset[["Age"]])
+    merged_data = []
 
-    # Find nearest ages for each user in the usage dataset
-    nearest_indices = age_tree.query(usage_subset[["Age"]])[1]
+    for gender in ["Male", "Female"]:
+        usage_subset = usage_df[usage_df["Gender"] == gender]
+        sleep_subset = sleep_df_augmented[sleep_df_augmented["Gender"] == gender]
 
-    # Instead of directly assigning the nearest match, randomly select from close matches
-    matched_sleep_data = []
-    for idx in nearest_indices:
-        # Get all sleep records with the closest age
-        closest_age = sleep_subset.iloc[idx]["Age"]
-        close_matches = sleep_subset[sleep_subset["Age"] == closest_age]
+        # Build KDTree for nearest neighbor search
+        age_tree = KDTree(sleep_subset[["Age"]])
+        nearest_indices = age_tree.query(usage_subset[["Age"]], k=3)[1]  # Get top 3 nearest ages
 
-        # Randomly select one row from available close matches
-        matched_sleep_data.append(close_matches.sample(n=1, random_state=random.randint(1, 1000)).iloc[0])
+        matched_sleep_data = []
+        for indices in nearest_indices:
+            # Randomly choose one of the k nearest neighbors
+            idx = random.choice(indices)
 
-    # Convert list of matched sleep data to DataFrame
-    matched_sleep_df = pd.DataFrame(matched_sleep_data).reset_index(drop=True)
+            # Ensure Age is an int
+            closest_age = int(sleep_subset.iloc[idx]["Age"])
+            close_matches = sleep_subset[sleep_subset["Age"].astype(int) == closest_age]
 
-    # Combine the matched data with the original social media usage data
-    merged_subset = pd.concat([usage_subset.reset_index(drop=True), matched_sleep_df], axis=1)
-    merged_data.append(merged_subset)
+            if not close_matches.empty:
+                matched_sleep_data.append(
+                    close_matches.sample(n=1, random_state=random.randint(1, 1000)).iloc[0]
+                )
 
-# Combine male and female merged data
-final_merged_df = pd.concat(merged_data, ignore_index=True)
+        matched_sleep_df = pd.DataFrame(matched_sleep_data).reset_index(drop=True)
+        merged_subset = pd.concat([usage_subset.reset_index(drop=True), matched_sleep_df], axis=1)
+        merged_data.append(merged_subset)
 
-# Step 4: Save the new merged dataset
-output_file = "Merged_Dataset_Upsampled.csv"
-final_merged_df.to_csv(output_file, index=False)
+    final_merged_df = pd.concat(merged_data, ignore_index=True)
 
-print(f"Merged dataset saved as {output_file}")
+    # Remove duplicate columns
+    final_merged_df = final_merged_df.loc[:, ~final_merged_df.columns.duplicated()]
+
+    # Save to CSV
+    final_merged_df.to_csv(output_path, index=False)
+
+    print(f"✅ Merged file saved at: {output_path}")
+    return final_merged_df
+
+
+# --- Merge and Save All ---
+merge_and_save(train_df, sleep_df_augmented, train_output)
+merge_and_save(test_df, sleep_df_augmented, test_output)
+merge_and_save(val_df, sleep_df_augmented, val_output)
