@@ -80,3 +80,14 @@ def merge_and_save(usage_df, sleep_df_augmented, output_path):
 merge_and_save(train_df, sleep_df_augmented, train_output)
 merge_and_save(test_df, sleep_df_augmented, test_output)
 merge_and_save(val_df, sleep_df_augmented, val_output)
+
+# Verification: Show top 5 rows and dataset summary
+train_df = pd.read_csv(train_output)
+print("===== 📊 Merged Train Dataset =====")
+print(train_df.head())  # Top 5 rows
+
+print("\n--- Summary Statistics ---")
+print(train_df.describe(include='all'))  # All-column summary
+
+print("\n--- Missing Values ---")
+print(train_df.isnull().sum())  # Count of nulls per column
