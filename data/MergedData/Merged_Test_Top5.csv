@@ -1,0 +1,72 @@
+Age,Gender,Platform,Daily_Usage_Time (minutes),Posts_Per_Day,Likes_Received_Per_Day,Comments_Received_Per_Day,Messages_Sent_Per_Day,Dominant_Emotion,BMI Category,Occupation,Sleep Duration,Physical Activity Level
+27,Male,Telegram,105.0,3.0,48.0,20.0,28.0,Anxiety,Overweight,Software Engineer,6.1,42
+33,Male,LinkedIn,45.0,1.0,10.0,5.0,12.0,Boredom,Normal,Doctor,6.0,30
+35,Male,Twitter,70.0,1.0,13.0,8.0,10.0,Boredom,Normal Weight,Software Engineer,7.5,60
+31,Male,LinkedIn,60.0,1.0,15.0,7.0,17.0,Anxiety,Normal,Doctor,7.8,75
+31,Male,Telegram,50.0,2.0,20.0,10.0,12.0,Sadness,Normal,Doctor,7.7,75
+34,Male,LinkedIn,65.0,1.0,14.0,6.0,15.0,Boredom,Normal,Doctor,6.0,30
+28,Male,Instagram,145.0,5.0,75.0,20.0,35.0,Happiness,Normal,Doctor,6.2,60
+29,Male,Twitter,95.0,4.0,50.0,22.0,22.0,Anger,Normal,Doctor,7.8,75
+31,Male,Facebook,80.0,2.0,20.0,10.0,20.0,Neutral,Normal,Doctor,7.7,75
+23,Male,Whatsapp,70.0,3.0,22.0,10.0,18.0,Anger,Overweight,Software Engineer,6.1,42
+25,Male,Telegram,80.0,4.0,30.0,13.0,25.0,Neutral,Overweight,Software Engineer,6.1,42
+29,Male,Facebook,65.0,2.0,22.0,8.0,20.0,Anxiety,Normal,Doctor,7.8,75
+27,Male,Facebook,60.0,1.0,12.0,5.0,15.0,Boredom,Overweight,Software Engineer,6.1,42
+31,Male,Telegram,50.0,2.0,20.0,10.0,12.0,Sadness,Normal,Doctor,7.6,75
+31,Male,Telegram,85.0,3.0,45.0,20.0,28.0,Sadness,Normal,Doctor,7.7,75
+28,Male,Instagram,145.0,7.0,80.0,30.0,35.0,Happiness,Normal,Doctor,6.2,60
+35,Male,Twitter,70.0,1.0,13.0,8.0,10.0,Boredom,Normal Weight,Software Engineer,7.5,60
+31,Male,LinkedIn,60.0,1.0,15.0,7.0,17.0,Anxiety,Normal,Doctor,7.8,75
+30,Male,Twitter,70.0,2.0,30.0,12.0,20.0,Anxiety,Normal,Doctor,7.8,75
+34,Male,LinkedIn,65.0,1.0,14.0,6.0,15.0,Boredom,Normal,Doctor,6.1,30
+23,Male,Whatsapp,70.0,3.0,22.0,10.0,18.0,Anger,Overweight,Software Engineer,6.1,42
+24,Male,Telegram,75.0,3.0,37.0,16.0,22.0,Neutral,Normal,Doctor,6.2,60
+28,Male,Twitter,90.0,4.0,48.0,22.0,25.0,Anxiety,Normal,Doctor,6.2,60
+27,Male,Telegram,105.0,3.0,45.0,15.0,28.0,Anxiety,Overweight,Software Engineer,6.1,42
+25,Male,Telegram,80.0,4.0,28.0,11.0,25.0,Neutral,Overweight,Software Engineer,6.1,42
+28,Male,Twitter,100.0,6.0,50.0,30.0,29.0,Anger,Obese,Sales Representative,5.9,30
+27,Male,Facebook,60.0,1.0,10.0,4.0,15.0,Boredom,Normal,Doctor,6.2,60
+30,Male,Instagram,175.0,7.0,100.0,33.0,38.0,Happiness,Normal,Doctor,7.6,75
+35,Male,Twitter,70.0,1.0,13.0,8.0,10.0,Boredom,Normal,Engineer,7.3,60
+29,Male,LinkedIn,60.0,2.0,15.0,5.0,10.0,Neutral,Normal,Doctor,6.0,30
+31,Male,Facebook,80.0,2.0,20.0,10.0,20.0,Neutral,Normal,Doctor,7.8,75
+31,Male,Telegram,50.0,2.0,18.0,6.0,10.0,Boredom,Normal,Doctor,7.7,75
+31,Male,Facebook,80.0,2.0,20.0,10.0,20.0,Neutral,Normal,Doctor,7.7,75
+31,Male,Instagram,175.0,6.0,72.0,30.0,33.0,Happiness,Normal,Doctor,7.7,75
+26,Male,Facebook,75.0,2.0,30.0,14.0,20.0,Anxiety,Obese,Sales Representative,5.9,30
+26,Male,Twitter,75.0,2.0,23.0,12.0,18.0,Sadness,Overweight,Software Engineer,6.1,42
+32,Male,Instagram,130.0,5.0,70.0,19.0,31.0,Neutral,Normal,Doctor,6.0,30
+30,Male,Twitter,70.0,2.0,28.0,10.0,20.0,Anxiety,Normal,Doctor,7.9,75
+33,Male,LinkedIn,45.0,1.0,10.0,5.0,12.0,Boredom,Normal,Doctor,6.1,30
+26,Male,Twitter,75.0,2.0,23.0,12.0,18.0,Sadness,Normal,Doctor,6.2,60
+26,Male,Facebook,75.0,2.0,30.0,14.0,20.0,Anxiety,Overweight,Software Engineer,6.1,42
+27,Male,Twitter,90.0,3.0,40.0,16.0,24.0,Sadness,Obese,Sales Representative,5.9,30
+22,Male,Twitter,70.0,1.0,20.0,5.0,22.0,Neutral,Overweight,Software Engineer,6.1,42
+33,Male,LinkedIn,85.0,4.0,35.0,18.0,18.0,Boredom,Normal,Doctor,6.0,30
+24,Male,Telegram,75.0,3.0,37.0,16.0,22.0,Neutral,Overweight,Software Engineer,6.1,42
+27,Male,Facebook,60.0,1.0,10.0,4.0,15.0,Boredom,Overweight,Software Engineer,6.1,42
+27,Female,Snapchat,120.0,4.0,40.0,18.0,22.0,Neutral,Normal Weight,Nurse,6.5,40
+25,Female,Instagram,160.0,6.0,85.0,26.0,30.0,Happiness,Normal Weight,Nurse,6.5,40
+25,Female,Instagram,160.0,6.0,85.0,26.0,30.0,Happiness,Normal Weight,Nurse,6.5,40
+32,Female,Instagram,140.0,5.0,70.0,22.0,33.0,Happiness,Normal Weight,Nurse,7.9,75
+32,Female,Instagram,140.0,6.0,75.0,28.0,30.0,Happiness,Normal Weight,Nurse,7.9,75
+25,Female,Instagram,160.0,6.0,85.0,26.0,30.0,Happiness,Normal Weight,Nurse,6.5,40
+22,Female,Facebook,70.0,1.0,14.0,6.0,10.0,Neutral,Normal Weight,Nurse,6.5,40
+27,Female,Snapchat,120.0,4.0,40.0,18.0,22.0,Neutral,Normal Weight,Nurse,6.5,40
+21,Female,Twitter,90.0,3.0,37.0,14.0,20.0,Sadness,Normal Weight,Nurse,6.5,40
+28,Female,LinkedIn,55.0,1.0,12.0,6.0,10.0,Boredom,Normal Weight,Nurse,6.5,40
+32,Female,Instagram,140.0,6.0,75.0,28.0,30.0,Happiness,Normal Weight,Nurse,7.9,75
+29,Female,Whatsapp,90.0,2.0,24.0,12.0,22.0,Anger,Normal Weight,Nurse,6.5,40
+29,Female,Snapchat,95.0,2.0,23.0,10.0,28.0,Sadness,Normal Weight,Nurse,6.5,40
+25,Female,Instagram,120.0,5.0,50.0,20.0,25.0,Happiness,Normal Weight,Nurse,6.5,40
+34,Female,Instagram,120.0,5.0,60.0,25.0,25.0,Anger,Overweight,Scientist,5.8,32
+27,Female,Snapchat,120.0,4.0,40.0,18.0,22.0,Neutral,Normal Weight,Nurse,6.5,40
+28,Female,Whatsapp,100.0,4.0,37.0,14.0,26.0,Anxiety,Normal Weight,Nurse,6.5,40
+27,Female,Twitter,85.0,3.0,40.0,18.0,20.0,Anger,Normal Weight,Nurse,6.5,40
+23,Female,Twitter,75.0,4.0,45.0,20.0,25.0,Anxiety,Normal Weight,Nurse,6.5,40
+23,Female,Twitter,75.0,4.0,45.0,20.0,25.0,Anxiety,Normal Weight,Nurse,6.5,40
+22,Female,Facebook,70.0,1.0,14.0,6.0,10.0,Neutral,Normal Weight,Nurse,6.5,40
+29,Female,Snapchat,90.0,3.0,22.0,10.0,21.0,Sadness,Normal Weight,Nurse,6.5,40
+24,Female,Twitter,105.0,4.0,35.0,20.0,23.0,Anger,Normal Weight,Nurse,6.5,40
+28,Female,Instagram,200.0,8.0,110.0,40.0,45.0,Anxiety,Normal Weight,Nurse,6.5,40
+28,Female,Twitter,95.0,4.0,48.0,22.0,25.0,Happiness,Normal Weight,Nurse,6.5,40

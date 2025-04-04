@@ -118,8 +118,9 @@ for col, mapping in encoding_maps.items():
 
 print("\nCategorical Encoding Completed.")
 
-### SCALE NUMERICAL FEATURES ###
-scaler = StandardScaler()
+from sklearn.preprocessing import MinMaxScaler
+
+scaler = MinMaxScaler()
 scaled_features = num_cols + ["Engagement_Score"]
 processed_df[scaled_features] = scaler.fit_transform(processed_df[scaled_features])
 
@@ -210,36 +211,42 @@ plt.show()
 
 print("\nData Visualization Completed.")
 
-# Selecting the most significant feature: Engagement_Score
+import numpy as np
+import scipy.stats as stats
+
+# Recalculate statistics for safety
 feature = "Daily_Usage_Time (minutes)"
+data = train_df[feature].dropna()
 
-# Calculate statistics
-std_dev = train_df[feature].std()
-mean_value = train_df[feature].mean()
-variance = train_df[feature].var()
+mean_value = data.mean()
+std_dev = data.std()
+variance = data.var()
 
-# Prepare data for plotting
-plot_data = train_df[feature].sort_values().reset_index(drop=True)
-
+# Plot histogram with KDE
 plt.figure(figsize=(10, 5))
+sns.histplot(data, bins=30, kde=True, color='skyblue', stat='density', label='Data Distribution')
 
-# Line plot for Engagement_Score
-plt.plot(plot_data, label=f"{feature} (Sorted)", color='royalblue', linewidth=2)
+# Plot normal distribution curve
+xmin, xmax = plt.xlim()
+x = np.linspace(xmin, xmax, 100)
+p = stats.norm.pdf(x, mean_value, std_dev)
+plt.plot(x, p, 'r', linewidth=2, label='Gaussian Curve')
 
-# Horizontal lines for Mean & Standard Deviation
-plt.axhline(y=mean_value, color='green', linestyle='--', linewidth=2, label=f"Mean: {mean_value:.2f}")
-plt.axhline(y=mean_value + std_dev, color='orange', linestyle='--', linewidth=2, label=f"Mean + 1 SD: {mean_value + std_dev:.2f}")
-plt.axhline(y=mean_value - std_dev, color='orange', linestyle='--', linewidth=2, label=f"Mean - 1 SD: {mean_value - std_dev:.2f}")
+# Plot lines for mean ± std deviation
+plt.axvline(mean_value, color='green', linestyle='--', linewidth=2, label=f'Mean: {mean_value:.2f}')
+plt.axvline(mean_value + std_dev, color='orange', linestyle='--', linewidth=2, label=f'+1 SD: {mean_value + std_dev:.2f}')
+plt.axvline(mean_value - std_dev, color='orange', linestyle='--', linewidth=2, label=f'-1 SD: {mean_value - std_dev:.2f}')
 
-# Title and Labels
-plt.title(f"Analysis of {feature}: Mean, Standard Deviation, and Variance", fontsize=14)
-plt.xlabel("Sorted Data Index", fontsize=12)
-plt.ylabel(feature, fontsize=12)
+# Final touches
+plt.title(f"{feature} Distribution with Mean & Standard Deviation", fontsize=14)
+plt.xlabel(feature, fontsize=12)
+plt.ylabel("Density", fontsize=12)
 plt.legend()
 plt.grid(True, linestyle='--', alpha=0.6)
-
+plt.tight_layout()
 plt.show()
 
+# Print stats
 print(f"\n📊 {feature} Analysis:")
 print(f"Mean: {mean_value:.2f}")
 print(f"Standard Deviation: {std_dev:.2f}")
