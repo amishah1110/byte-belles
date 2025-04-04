@@ -66,11 +66,5 @@ def show_home_page():
                     <div class='card-subtitle'>Analyze usage and impact</div>
                 </div>
             </a>
-            <a href='?page=predictor' style='text-decoration: none;'>
-                <div class='card'>
-                    <div class='card-title'>🤖 Predict Platform</div>
-                    <div class='card-subtitle'>Input user behavior to predict platform</div>
-                </div>
-            </a>
         </div>
     """, unsafe_allow_html=True)
