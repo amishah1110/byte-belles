@@ -2,6 +2,7 @@ import streamlit as st
 import home
 import sleep_dav
 import shum
+import predict
 
 # Set page config at the top
 st.set_page_config(page_title="Byte Belles Dashboard", layout="wide")
@@ -15,3 +16,5 @@ elif page == "sleep":
     sleep_dav.show_preprocessed_sleep()
 elif page == "social":
     shum.show_social_dashboard()
+elif page == "predictor":
+    predict.show_predictor_page()

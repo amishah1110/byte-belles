@@ -1,70 +1,49 @@
 import streamlit as st
 
 
-
 def show_social_dashboard():
-
-
     # Set up Streamlit layout
- #   st.set_page_config(page_title="Social Media Usage Dashboard", layout="wide")
-    #st.title("📊 Social Media Usage Dashboard")
+    # st.set_page_config(page_title="Social Media Usage Dashboard", layout="wide")
+    st.title("📊 Social Media Usage Dashboard")
 
     # Dictionary to store image paths and their inferences
     plots = [
         {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\standard deviation and mean of daily usage.png",
-            "title": "Standard Deviation and Mean of Daily Usage",
-            "inference": "Right-skewed distribution shows most users spend between 50-100 minutes on social media. A small number spend significantly more (>150 minutes).",
-
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\engagement score by emotion.png",
+            "title": "Age Group Distribution of Users and Distribution of Social Media Platform Usage",
+            "inference": "\n1. The majority of users (63.9%) fall within the 25-34 age group, followed by the 18-24 age group (24.2%).\n 2. Instagram (22.0%) and Twitter (20.8%) are the most frequently used social media platforms among the users in this dataset.",
         },
         {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\daily usage time by platform.png",
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\Figure_1.png",
+            "title": "Platform Preference by Age Group",
+            "inference": "Instagram is the most preferred platform across all represented age groups, particularly the 25-34 demographic.",
+        },
+        {
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\Figure_2.png",
+            "title": "Engagement Score by Age Group",
+            "inference": "The 25-34 and 35-44 age groups exhibit higher median engagement scores compared to the 18-24 and Unknown age groups, with the 18-24 group showing more variability and outliers.",
+        },
+        {
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\Figure_4.png",
+            "title": "Platform vs Emotion Correlation",
+            "inference": "Instagram shows a notably high correlation with Happiness, while Twitter has a relatively higher association with Anger compared to other platforms.",
+        },
+        {
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\Figure_3.png",
+            "title": "Engagement Score by Emotion",
+            "inference": "Users expressing Happiness tend to have the highest engagement scores, while Boredom is associated with the lowest engagement."
+        },
+        {
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\Figure_5.png",
             "title": "Daily Usage Time by Platform",
-            "inference": "This plot highlights platform engagement levels. Some platforms may have stronger engagement strategies leading to higher daily usage.",
-
+            "inference": "Instagram exhibits the highest median daily usage time, while LinkedIn shows the lowest among the platforms analyzed.",
         },
         {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\emotion and platform heattmap.png",
-            "title": "Emotion and Platform Heatmap",
-            "inference": "Platforms like Twitter show higher anger-related interactions, while Instagram is linked to positive emotions. This could guide content strategies.",
-
+            "path": "D:\\Datathon\\byte-belles\\Data\\train social media\\Figure_6.png",
+            "title": "Daily Usage Time Distribution with Mean & Standard Deviation",
+            "inference": "The distribution of daily usage time is right-skewed and appears bimodal, with a mean around 96 minutes and a standard deviation of approximately 39 minutes, indicating variability in user engagement."
         },
-        {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\Platform preferance by age.png",
-            "title": "Platform Preference by Age",
-            "inference": "Younger users dominate visually engaging platforms like Instagram, while older users prefer text-based platforms like LinkedIn or Facebook.",
 
-        },
-        {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\train_KDEplot.png",
-            "title": "KDE Plot of Daily Usage Time",
-            "inference": "A bimodal trend indicates two groups: moderate users (70-80 mins) and heavy users (~120 mins). A long tail suggests a few extreme users."
-
-        },
-        {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\train-correlation-heatmap.png",
-            "title": "Correlation Heatmap",
-            "inference": "Daily usage time strongly correlates with posts, likes, and messages sent per day, suggesting higher engagement increases usage time.",
-
-        },
-    {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\Distribution of platform usage and age group.png",
-            "title": "Distribution of platform usage and age group.png",
-            "inference": "**Young users (18-24) dominate Instagram, Snapchat, and TikTok** – Higher engagement in visually driven platforms."
-       },
-    {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\engagement score by age group.png",
-            "title": "engagement score by age group.png",
-            "inference": "**18-24 age group shows the highest engagement** – This is the most active demographic across platforms."
-    },
-    {
-            "path": "D:\\Datathon\\byte-belles\\Data\\Train_images\\engagement score by emotion.png",
-            "title": "engagement score by emotion.png",
-            "inference": """
-        - **Happiness and Excitement drive higher engagement** – Positive emotions correlate with longer usage sessions.
-        - **Anger leads to spikes in engagement** – Users vent frustrations on platforms like Twitter.
-        - **Sadness shows lower engagement** – Users experiencing sadness may reduce platform usage.
-        """}
     ]
 
     # Display images and inferences in pairs
@@ -77,7 +56,6 @@ def show_social_dashboard():
             with cols[j]:
                 st.image(plot["path"], caption=plot["title"], use_container_width=True)
                 st.write(f"**{plot['title']} Inference:** {plot['inference']}")
-
 
     if st.button("🔙 Back to Home"):
         st.query_params.page = "home"

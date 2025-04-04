@@ -1,9 +1,22 @@
 import streamlit as st
 
 def show_home_page():
-  #  st.set_page_config(page_title="Byte Belles Dashboard", layout="wide")
+    # Title & intro
     st.markdown("## 🏠 Welcome to the Dashboard")
     st.markdown("Select one of the visualizations below:")
+
+    # Background color
+    st.markdown("""
+        <style>
+        body {
+            background-color: #fff9c4  !important;
+        }
+        .stApp {
+            background-color: #fff9c4;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 
     # --- Card Styles ---
     st.markdown("""
@@ -16,7 +29,7 @@ def show_home_page():
         .card {
             width: 300px;
             height: 180px;
-            background-color: #f8f9fa;
+            background-color: #e0f7fa ;
             border-radius: 16px;
             padding: 20px;
             text-align: center;
@@ -51,6 +64,12 @@ def show_home_page():
                 <div class='card'>
                     <div class='card-title'>📱 Social Media</div>
                     <div class='card-subtitle'>Analyze usage and impact</div>
+                </div>
+            </a>
+            <a href='?page=predictor' style='text-decoration: none;'>
+                <div class='card'>
+                    <div class='card-title'>🤖 Predict Platform</div>
+                    <div class='card-subtitle'>Input user behavior to predict platform</div>
                 </div>
             </a>
         </div>
