@@ -1,4 +1,5 @@
 #Team Name: BYTE BELLES
+
 ##Problem Statement: PS-2
 
 **Problem statement summary**
@@ -40,9 +41,8 @@ Both datasets contain numerical and categorical data requiring extensive preproc
 2. Engagement_Score: A composite metric derived from post frequency, likes, messages, and time spent. (weighted sum of top 5 features. These features were extracted from feature scores using the best classification model)
 3. Sentiment Analysis: Emotion labels mapped to numerical values to assess correlation with engagement.
 
-
-Feature importance in Sleep dataset
-
+![Feature importance in sleep dataset](https://github.com/user-attachments/assets/7ec11b54-ad41-4444-b520-d617c0e6e953)
+![WhatsApp Image 2025-04-04 at 18 44 04_d03c5b13](https://github.com/user-attachments/assets/37504fd9-a65c-4411-bafc-c896519e0741)
 
 
 **Model Selection**
@@ -55,10 +55,21 @@ Selecting the best predictive model was a crucial step. We employed the TPOT Aut
   6. Naïve Bayes: Works well with categorical data but assumes independence.
 
 **Model Performance Comparison**
+![model selection](https://github.com/user-attachments/assets/aed617e0-131b-474f-ae7e-e87399245bf5)
+Gradient Boosting was chosen due to good accuracy in train and test datasets
+
+
+**Dashboard Images**
+![WhatsApp Image 2025-04-04 at 18 57 50_25a8a434](https://github.com/user-attachments/assets/55e4b6c3-11bf-4b56-b96b-5d2b32f29ac1)
+![WhatsApp Image 2025-04-04 at 18 58 06_eaaf858c](https://github.com/user-attachments/assets/01781c2e-d216-4eaa-b51f-da64b1e6c154)
+![WhatsApp Image 2025-04-04 at 18 58 37_2547fe1e](https://github.com/user-attachments/assets/2f0337f6-6410-4c38-be0b-22fdd7187d87)
+![WhatsApp Image 2025-04-04 at 18 58 56_72711ea3](https://github.com/user-attachments/assets/c33267dd-e089-4f73-9ef9-378cd812c016)
+![WhatsApp Image 2025-04-04 at 18 59 14_811e1507](https://github.com/user-attachments/assets/13c6ed0d-b7fc-4ab6-a8a0-bb44ba57a978)
 
 
 
-**Dashboard Images*
+
+
 
 
 
